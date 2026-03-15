@@ -1,15 +1,20 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Pressable } from "react-native";
 import { useAuth } from "@clerk/expo";
 import { Redirect } from "expo-router";
 
 export default function Index() {
-  const {isSignedIn} = useAuth()
+  const {isSignedIn,isLoaded ,signOut} = useAuth()
+  if(!isLoaded) return null;
   if(!isSignedIn){
     return <Redirect href= {"/(auth)"} />
   }
   return (
     <View style={styles.container}>
-      <Text className="text-red-500">Edit src/app/index.tsx to edit this screen 123.</Text>
+      <Text className="text-primary">Edit src/app/index.tsx to edit this screen 123.</Text>
+      <Pressable onPress={()=> signOut()}>
+        <Text>Sign out</Text>
+      </Pressable>
+
     </View>
   );
 }
