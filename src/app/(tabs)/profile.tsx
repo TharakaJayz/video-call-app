@@ -6,9 +6,11 @@ import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/lib/theme";
 import * as Sentry from "@sentry/react-native";
+import { useAppContext } from "@/context/AppProvider";
 const ProfileScreen = () => {
   const { signOut } = useAuth();
   const { user } = useUser();
+   const {channel} = useAppContext()
   const MENU_ITEMS = [
     {
       icon: "notifications-outline",

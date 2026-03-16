@@ -2,13 +2,15 @@ import { Stack } from "expo-router";
 import "../../global.css";
 
 import { ClerkProvider } from "@clerk/expo";
-import { tokenCache } from '@clerk/expo/token-cache'
+import { tokenCache } from "@clerk/expo/token-cache";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import * as Sentry from '@sentry/react-native';
+import * as Sentry from "@sentry/react-native";
+import { AppProvider } from "@/context/AppProvider";
+import ChatWrapper from "@/components/ChatWrapper";
 
 Sentry.init({
-  dsn: 'https://2f82c08785ba9ea96fae9d6f53bae426@o4511015209205760.ingest.us.sentry.io/4511047472316416',
+  dsn: "https://2f82c08785ba9ea96fae9d6f53bae426@o4511015209205760.ingest.us.sentry.io/4511047472316416",
 
   // Adds more context data to events (IP address, cookies, user, etc.)
   // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
@@ -26,17 +28,21 @@ Sentry.init({
   // spotlight: __DEV__,
 });
 
-
 export default function RootLayout() {
-  
   return (
-    <ClerkProvider tokenCache={tokenCache}  publishableKey= {process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!}>
-      <GestureHandlerRootView className="flex-1" >
-
-      <Stack screenOptions={{headerShown:false}}>
-        <Stack.Screen name="(auth)"/>
-        <Stack.Screen name="(tabs)"/>
-      </Stack>
+    <ClerkProvider
+      tokenCache={tokenCache}
+      publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!}
+    >
+      <GestureHandlerRootView className="flex-1">
+        <ChatWrapper>
+          <AppProvider>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(auth)" />
+              <Stack.Screen name="(tabs)" />
+            </Stack>
+          </AppProvider>
+        </ChatWrapper>
       </GestureHandlerRootView>
     </ClerkProvider>
   );
