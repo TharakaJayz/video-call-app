@@ -76,7 +76,9 @@ const ChatClient = ({
 
   return (
     <OverlayProvider value={{style:studyBuddyTheme}}>
-      <Chat client={chatClient} style={studyBuddyTheme} ></Chat>
+      <Chat client={chatClient} style={studyBuddyTheme} >
+        {children}
+      </Chat>
     </OverlayProvider>
   );
 };

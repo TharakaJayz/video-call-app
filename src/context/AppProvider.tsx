@@ -1,13 +1,12 @@
 import React, { createContext, useState } from "react";
-import {Channel,LocalMessage} from "stream-chat";
-
+import { Channel, LocalMessage } from "stream-chat";
 
 type AppContextType = {
-    channel: Channel | null ;
-    setChannel: (channel: Channel | null) => void;
-    thread: LocalMessage | null;
-    setThread: (thread: LocalMessage | null) => void;
-}
+  channel: Channel | null;
+  setChannel: (channel: Channel | null) => void;
+  thread: LocalMessage | null;
+  setThread: (thread: LocalMessage | null) => void;
+};
 export const AppContext = createContext<AppContextType>({
   channel: null,
   setChannel: (channel) => {},
@@ -15,7 +14,7 @@ export const AppContext = createContext<AppContextType>({
   setThread: (thread) => {},
 });
 
-export const AppProvider = ({ children }:{ children: React.ReactNode }) => {
+export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [channel, setChannel] = useState<Channel | null>(null);
   const [thread, setThread] = useState<LocalMessage | null>(null);
 

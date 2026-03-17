@@ -1,5 +1,5 @@
 import { View, Text, Pressable, Alert } from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from "react-native-safe-area-context";
 import React from "react";
 import { useAuth, useUser } from "@clerk/expo";
 import { Image } from "expo-image";
@@ -10,7 +10,7 @@ import { useAppContext } from "@/context/AppProvider";
 const ProfileScreen = () => {
   const { signOut } = useAuth();
   const { user } = useUser();
-   const {channel} = useAppContext()
+  const { channel } = useAppContext();
   const MENU_ITEMS = [
     {
       icon: "notifications-outline",
