@@ -1,12 +1,38 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { EmptyState } from "@/components/EmptyState";
+import { FullScreenLoader } from "@/components/FullScreenLoader";
+import { useAppContext } from "@/context/AppProvider";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Channel, Thread } from "stream-chat-expo";
 
 const ThreadScreen = () => {
-  return (
-    <View>
-      <Text>ThreadScreen</Text>
-    </View>
-  )
-}
+  const { channel, thread, setThread } = useAppContext();
+  const headerHeight = useHeaderHeight();
 
-export default ThreadScreen
+  if (channel === null) return <FullScreenLoader message="Loading thread..." />;
+
+  return (
+    <SafeAreaView className="flex-1 bg-surface">
+      <Channel
+        channel={channel}
+        keyboardVerticalOffset={headerHeight}
+        thread={thread}
+        threadList
+        EmptyStateIndicator={() => (
+          <EmptyState
+            icon="book-outline"
+            title="No messages yet"
+            subtitle="Start a study conversation!"
+          />
+        )}
+      >
+        <View className="flex-1 justify-start">
+          <Thread onThreadDismount={() => setThread(null)} />
+        </View>
+      </Channel>
+    </SafeAreaView>
+  );
+};
+
+export default ThreadScreen;

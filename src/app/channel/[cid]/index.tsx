@@ -1,34 +1,119 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { useAppContext } from '@/context/AppProvider';
-import { useChatContext } from 'stream-chat-expo';
-import { useNavigation, useRouter } from 'expo-router';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { FullScreenLoader } from '@/components/FullScreenLoader';
+import { View, Text, TouchableOpacity } from "react-native";
+import React, { useLayoutEffect } from "react";
+import { useAppContext } from "@/context/AppProvider";
+import {
+  Channel,
+  MessageInput,
+  MessageList,
+  useChatContext,
+} from "stream-chat-expo";
+import { useNavigation, useRouter } from "expo-router";
+import { Background, useHeaderHeight } from "@react-navigation/elements";
+import { FullScreenLoader } from "@/components/FullScreenLoader";
+import { EmptyState } from "@/components/EmptyState";
+import { COLORS } from "@/lib/theme";
+import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 
 const ChannelScreen = () => {
-    const {channel,setThread} = useAppContext();
-    const {client} = useChatContext();
-    const router = useRouter();
-    const navigation = useNavigation();
+  const { channel, setThread } = useAppContext();
+  const { client } = useChatContext();
+  const router = useRouter();
+  const navigation = useNavigation();
 
-    const headerHeight = useHeaderHeight();
-    let displayName = "";
-    let avatrUrl = "";
-    if(channel){
-        const members = Object.values(channel.state.members);
-        const otherMember = members.find((member)=> member.user_id! === client.userID);
-        displayName = otherMember?.user?.name || "Unknown User";
-        avatrUrl = otherMember?.user?.image || "";
-
-    }
-    if(!channel) return <FullScreenLoader message='Loading Study Room'  />
+  const headerHeight = useHeaderHeight();
+  let displayName = "";
+  let avatarUrl = "";
+  if (channel) {
+    const members = Object.values(channel.state.members);
+    const otherMember = members.find(
+      (member) => member.user_id! === client.userID,
+    );
+    displayName = otherMember?.user?.name || "Unknown User";
+    avatarUrl = otherMember?.user?.image || "";
+  }
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerStyle: {
+        backgroundColor: COLORS.surface,
+      },
+      headerTintColor: COLORS.text,
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => router.back()}
+          className="ml-2 flex-row items-center"
+        >
+          <Ionicons name="arrow-back" size={24} color={COLORS.text} />
+        </TouchableOpacity>
+      ),
+      headerTitle: () => (
+        <View className="flex-row items-center">
+          {avatarUrl ? (
+            <Image
+              source={avatarUrl}
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                marginRight: 10,
+              }}
+            />
+          ) : (
+            <View
+              className="mr-2.5 h-8 w-8 items-center justify-center rounded-full"
+              style={{ backgroundColor: COLORS.primary }}
+            >
+              <Text className="text-base font-semibold text-foreground">
+                {displayName.charAt(0).toUpperCase()}
+              </Text>
+            </View>
+          )}
+          <Text className="font-semibold text-foreground">{displayName}</Text>
+        </View>
+      ),
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            // router.push({
+            //   pathname: "/call/[callId]",
+            //   params: { callId: channel?.id! },
+            // });
+          }}
+        >
+          <Ionicons name="videocam-outline" size={24} color={COLORS.primary} />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+  if (!channel) return <FullScreenLoader message="Loading Study Room" />;
 
   return (
-    <View>
-      <Text>ChannelScreen</Text>
-    </View>
-  )
-}
+    <View className="flex-1 bg-border">
+      <Channel
+        channel={channel}
+        keyboardVerticalOffset={headerHeight}
+        EmptyStateIndicator={() => (
+          <EmptyState
+            icon="book-outline"
+            title="No messages yet"
+            subtitle="Start a study conversation!"
+          />
+        )}
+      >
+        <MessageList
+          onThreadSelect={(thread) => {
+            setThread(thread);
+            router.push(`/channel/${channel.cid}/thread/${thread?.cid}`);
+          }}
+        />
 
-export default ChannelScreen
+        <View className="pb-5 bg-surface">
+          <MessageInput audioRecordingEnabled />
+        </View>
+      </Channel>
+    </View>
+  );
+};
+
+export default ChannelScreen;

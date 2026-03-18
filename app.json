@@ -8,7 +8,8 @@
     "scheme": "studyapp",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.tharakajayz.study-app"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,6 +28,13 @@
     "plugins": [
       "expo-router",
       [
+        "expo-image-picker",
+        {
+          "cameraPermission": "$(PRODUCT_NAME) would like to use your camera to share image in a message.",
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#208AEF",
@@ -34,6 +42,12 @@
             "image": "./assets/images/splash-icon.png",
             "imageWidth": 76
           }
+        }
+      ], 
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "$(PRODUCT_NAME) would like to use your microphone for voice recording."
         }
       ],
       "expo-web-browser",
@@ -44,7 +58,8 @@
           "project": "study-app",
           "organization": "tharakajayz"
         }
-      ]
+      ],
+      "expo-audio"
     ],
     "experiments": {
       "typedRoutes": true,
